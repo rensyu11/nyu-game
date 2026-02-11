@@ -61,6 +61,13 @@ body {
   justify-content: center;
   z-index: 10;
   cursor: pointer;
+  text-align: center;
+  white-space: pre-line; /* 改行を反映 */
+}
+
+#score {
+  font-size: 36px;
+  font-weight: bold;
 }
 
 .score-float {

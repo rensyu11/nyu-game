@@ -70,6 +70,9 @@ function endGame() {
   clearInterval(gameTimer);
   clearInterval(moleTimer);
   clearMole();
+
+  // overlay にスコアを表示
+  overlay.textContent = `終了！\nスコア: ${score}`;
   overlay.style.display = 'flex';
 }
 
