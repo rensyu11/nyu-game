@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>もぐらたたき</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+  <div id="game">
 
-<h1>もぐらたたき</h1>
+    <h1>もぐらたたき</h1>
 
-<div class="info">
-  <button id="startBtn">スタート</button>
-  <button id="resetBtn">リセット</button>
-  <span>Score: <span id="score">0</span></span>
-  <span>Time: <span id="time">30</span></span>
-</div>
+    <div class="info">
+      <button id="startBtn">スタート</button>
+      <button id="resetBtn">リセット</button>
+      <span>Score: <span id="score">0</span></span>
+      <span>Time: <span id="time">30</span></span>
+    </div>
 
-<div id="field">
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-  <div class="hole"></div>
-</div>
+    <div id="field">
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+      <div class="hole"></div>
+    </div>
+    
+  </div>
 
-<div id="overlay">終了！</div>
+  <div id="overlay">終了！</div>
 
-<script src="js/game.js"></script>
+  <script src="js/game.js"></script>
 </body>
+
 </html>
