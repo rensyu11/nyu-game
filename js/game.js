@@ -1,120 +1,85 @@
-const holes = document.querySelectorAll('.hole');
-const scoreEl = document.getElementById('score');
-const timeEl = document.getElementById('time');
-const startBtn = document.getElementById('startBtn');
-const resetBtn = document.getElementById('resetBtn');
-const overlay = document.getElementById('overlay');
+// ゲーム進行の中枢
 
-const GOOD_IMG = 'images/good.png';
-const BAD_IMG = 'images/bad.png';
+import { CONFIG } from './config.js';
+import * as UI from './ui.js';
+import * as Mole from './mole.js';
 
-let score = 0;
-let timeLeft = 30;
-let gameTimer = null;
-let moleTimer = null;
-let activeHole = null;
-let active = false;
-let playing = false;
+export class Game {
+  constructor(field) {
+    this.field = field;
 
-function clearMole() {
-  holes.forEach(h => h.innerHTML = '');
-  active = false;
-  activeHole = null;
-}
+    this.score = 0;
+    this.highScore = 0;
+    this.timeLeft = CONFIG.GAME_TIME;
+    this.playing = false;
+  }
 
-function showMole() {
-  if (!playing) return;
+  loadHighScore() {
+    this.highScore = Number(localStorage.getItem('highScore')) || 0;
+    UI.updateHighScore(this.highScore);
+  }
 
-  clearMole();
+  start() {
+    this.reset();
+    this.playing = true;
 
-  const hole = holes[Math.floor(Math.random() * holes.length)];
-  const img = document.createElement('img');
+    this.loop();
+    this.startTimer();
+  }
 
-  const isBad = Math.random() < 0.2;
-  img.src = isBad ? BAD_IMG : GOOD_IMG;
-  img.dataset.type = isBad ? 'bad' : 'good';
-  img.classList.add('mole');
+  loop() {
+    if (!this.playing) return;
 
-  hole.appendChild(img);
-  activeHole = hole;
-  active = true;
+    Mole.showMole(this.field);
 
-  setTimeout(clearMole, 900);
-}
+    setTimeout(() => this.loop(), CONFIG.INITIAL_INTERVAL);
+  }
 
-holes.forEach(hole => {
-  hole.addEventListener('click', () => {
-    if (!playing || !active || hole !== activeHole) return;
+  startTimer() {
+    const timer = setInterval(() => {
+      this.timeLeft--;
+      UI.updateTime(this.timeLeft);
+
+      if (this.timeLeft <= 0) {
+        clearInterval(timer);
+        this.end();
+      }
+    }, 1000);
+  }
+
+  hit(hole) {
+    if (!this.playing) return;
 
     const img = hole.querySelector('img');
     if (!img) return;
 
     const delta = img.dataset.type === 'good' ? 1 : -1;
 
-    score += delta;
-    scoreEl.textContent = score;
+    this.score += delta;
+    UI.updateScore(this.score);
 
-    // スコア欄をフラッシュさせる
-    scoreEl.classList.remove('flash-plus', 'flash-minus');
-    void scoreEl.offsetWidth; // 再描画トリガ
-    scoreEl.classList.add(delta > 0 ? 'flash-plus' : 'flash-minus');
+    Mole.clearMoles(this.field);
+  }
 
-    clearMole();
+  end() {
+    this.playing = false;
 
-  });
-});
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      localStorage.setItem('highScore', this.highScore);
+    }
 
+    UI.showOverlay(
+      `終了！\nスコア: ${this.score}\nハイスコア: ${this.highScore}`
+    );
+  }
 
-function endGame() {
-  playing = false;
-  clearInterval(gameTimer);
-  clearInterval(moleTimer);
-  clearMole();
+  reset() {
+    this.score = 0;
+    this.timeLeft = CONFIG.GAME_TIME;
 
-  // overlay にスコアを表示
-  overlay.textContent = `終了！\nスコア: ${score}`;
-  overlay.style.display = 'flex';
-}
-
-function resetGame() {
-  playing = false;
-  clearInterval(gameTimer);
-  clearInterval(moleTimer);
-  clearMole();
-
-  score = 0;
-  timeLeft = 30;
-  scoreEl.textContent = score;
-  timeEl.textContent = timeLeft;
-
-  overlay.style.display = 'none';
-}
-
-function startGame() {
-  resetGame();
-  playing = true;
-
-  moleTimer = setInterval(showMole, 1000);
-
-  gameTimer = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-}
-
-startBtn.addEventListener('click', startGame);
-resetBtn.addEventListener('click', resetGame);
-
-// 終了画面クリックで初期画面へ
-overlay.addEventListener('click', resetGame);
-
-function showScoreEffect(hole, value) {
-  const el = document.createElement('div');
-  el.className = 'score-float ' + (value > 0 ? 'plus' : 'minus');
-  el.textContent = value > 0 ? `+${value}` : `${value}`;
-
-  hole.appendChild(el);
-
-  setTimeout(() => el.remove(), 500);
+    UI.updateScore(this.score);
+    UI.updateTime(this.timeLeft);
+    UI.hideOverlay();
+  }
 }
