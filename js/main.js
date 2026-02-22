@@ -1,8 +1,4 @@
 // 全体を組み立てるだけ
-// ロジックは書かない
-
-import { Game } from './game.js';
-import { createHoles } from './mole.js';
 
 const field = document.getElementById('field');
 

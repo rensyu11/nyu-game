@@ -1,60 +1,147 @@
+/* =========================
+   ベース設定
+========================= */
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  text-align: center;
   font-family: sans-serif;
+  background: #f5f5f5;
+  text-align: center;
 }
+
+/* =========================
+   ゲーム全体レイアウト
+========================= */
 
 #game {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
 }
 
+/* 情報エリア */
 .info {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
+
+.info span {
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+/* ボタン */
+button {
+  padding: 8px 16px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* =========================
+   フィールド（3x3）
+========================= */
 
 #field {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3vw;
-  padding: 3vw;
+  gap: 15px;
+
+  width: 90vw;
+  max-width: 500px;
+
+  margin: 20px auto;
 }
+
+/* =========================
+   穴（正方形）
+========================= */
 
 .hole {
-  aspect-ratio: 1/1;
-  background: #ccc;
   position: relative;
-  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  background: #b08968;
+  border-radius: 12px;
   overflow: hidden;
+
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
 }
 
-/* モグラ */
+/* =========================
+   モグラ画像
+========================= */
+
 .mole {
   position: absolute;
-  bottom: -100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  animation: rise 0.3s forwards;
+  object-fit: cover;
+  
+  pointer-events: none;
 }
 
-@keyframes rise {
-  to { bottom: 0; }
-}
+/* =========================
+   終了オーバーレイ
+========================= */
 
-/* 終了画面 */
 #overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
-  color: white;
-  font-size: 60px;
+
   display: none;
   justify-content: center;
   align-items: center;
+
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 32px;
+  text-align: center;
   white-space: pre-line;
+
   cursor: pointer;
+  padding: 20px;
+}
+
+/* =========================
+   ヒットエフェクト
+========================= */
+
+.hit-effect {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 10vw;
+  font-weight: 900;
+  text-shadow: 0 0 10px rgba(0,0,0,0.6);
+
+  animation: popFade 0.6s ease forwards;
+  pointer-events: none;
+}
+
+.hit-effect.good {
+  color: #2ecc71;
+}
+
+.hit-effect.bad {
+  color: #e74c3c;
+}
+
+@keyframes popFade {
+  0%   { transform: scale(0.5); opacity: 0; }
+  40%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
 }

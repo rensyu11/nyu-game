@@ -1,8 +1,6 @@
 // モグラの生成・削除だけ担当
 
-import { CONFIG } from './config.js';
-
-export function createHoles(field, onClick) {
+function createHoles(field, onClick) {
   for (let i = 0; i < CONFIG.HOLE_COUNT; i++) {
     const hole = document.createElement('div');
     hole.className = 'hole';
@@ -11,7 +9,7 @@ export function createHoles(field, onClick) {
   }
 }
 
-export function showMole(field) {
+function showMole(field) {
   clearMoles(field);
 
   const holes = field.querySelectorAll('.hole');
@@ -29,6 +27,6 @@ export function showMole(field) {
   setTimeout(() => clearMoles(field), CONFIG.INITIAL_DURATION);
 }
 
-export function clearMoles(field) {
+function clearMoles(field) {
   field.querySelectorAll('.hole').forEach(h => h.innerHTML = '');
 }

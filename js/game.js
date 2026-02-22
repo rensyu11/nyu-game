@@ -1,10 +1,6 @@
 // ゲーム進行の中枢
 
-import { CONFIG } from './config.js';
-import * as UI from './ui.js';
-import * as Mole from './mole.js';
-
-export class Game {
+class Game {
   constructor(field) {
     this.field = field;
 
@@ -16,7 +12,7 @@ export class Game {
 
   loadHighScore() {
     this.highScore = Number(localStorage.getItem('highScore')) || 0;
-    UI.updateHighScore(this.highScore);
+    updateHighScore(this.highScore);
   }
 
   start() {
@@ -30,7 +26,7 @@ export class Game {
   loop() {
     if (!this.playing) return;
 
-    Mole.showMole(this.field);
+    showMole(this.field);
 
     setTimeout(() => this.loop(), CONFIG.INITIAL_INTERVAL);
   }
@@ -38,7 +34,7 @@ export class Game {
   startTimer() {
     const timer = setInterval(() => {
       this.timeLeft--;
-      UI.updateTime(this.timeLeft);
+      updateTime(this.timeLeft);
 
       if (this.timeLeft <= 0) {
         clearInterval(timer);
@@ -53,12 +49,26 @@ export class Game {
     const img = hole.querySelector('img');
     if (!img) return;
 
-    const delta = img.dataset.type === 'good' ? 1 : -1;
+    const isGood = img.dataset.type === 'good';
+    const delta = isGood ? 1 : -1;
 
     this.score += delta;
-    UI.updateScore(this.score);
+    updateScore(this.score);
 
-    Mole.clearMoles(this.field);
+    clearMoles(this.field);
+    this.showEffect(hole, isGood);
+  }
+
+  showEffect(hole, isGood) {
+    const effect = document.createElement('div');
+    effect.className = 'hit-effect ' + (isGood ? 'good' : 'bad');
+    effect.textContent = isGood ? '○' : '×';
+
+    hole.appendChild(effect);
+
+    setTimeout(() => {
+      effect.remove();
+    }, 600);
   }
 
   end() {
@@ -69,7 +79,7 @@ export class Game {
       localStorage.setItem('highScore', this.highScore);
     }
 
-    UI.showOverlay(
+    showOverlay(
       `終了！\nスコア: ${this.score}\nハイスコア: ${this.highScore}`
     );
   }
@@ -78,8 +88,8 @@ export class Game {
     this.score = 0;
     this.timeLeft = CONFIG.GAME_TIME;
 
-    UI.updateScore(this.score);
-    UI.updateTime(this.timeLeft);
-    UI.hideOverlay();
+    updateScore(this.score);
+    updateTime(this.timeLeft);
+    hideOverlay();
   }
 }

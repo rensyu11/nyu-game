@@ -1,7 +1,6 @@
 // バランス調整専用ファイル
-// 将来ここだけ触ればOK
 
-export const CONFIG = {
+window.CONFIG = {
   GAME_TIME: 30,
   INITIAL_INTERVAL: 1000,
   INITIAL_DURATION: 900,
