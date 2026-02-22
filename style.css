@@ -37,12 +37,12 @@ html, body {
 /* モグラ */
 .mole {
   position: absolute;
-  bottom: 0;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 80%;               /* 穴より少し小さく */
-  height: auto;
-  object-fit: contain;      /* はみ出し防止 */
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
   pointer-events: none;
 }
 
