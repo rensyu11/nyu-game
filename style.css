@@ -1,0 +1,65 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+#game {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.info {
+  margin-bottom: 10px;
+}
+
+#field {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3vw;                 /* 画面幅基準で間隔 */
+  max-width: 500px;
+  width: 90vw;
+  margin: 20px auto;
+}
+
+.hole {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;      /* 常に正方形 */
+  background: #b08968;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* モグラ */
+.mole {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;               /* 穴より少し小さく */
+  height: auto;
+  object-fit: contain;      /* はみ出し防止 */
+  pointer-events: none;
+}
+
+@keyframes rise {
+  to { bottom: 0; }
+}
+
+/* 終了画面 */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 60px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  white-space: pre-line;
+  cursor: pointer;
+}
